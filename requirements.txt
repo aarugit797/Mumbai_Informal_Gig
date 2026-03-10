@@ -9,3 +9,4 @@ langchain-chroma
 sentence-transformers
 pypdf
 rank-bm25
+pysqlite3-binary
