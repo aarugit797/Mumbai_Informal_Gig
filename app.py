@@ -3,7 +3,6 @@ import sys
 sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
 import streamlit as st
 from streamlit_mic_recorder import speech_to_text
-import import_ipynb
 from engine import rag_chain  
 
 st.set_page_config(page_title="Mumbai Worker Sahayak", page_icon="🎙️")
