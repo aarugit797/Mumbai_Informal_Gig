@@ -12,3 +12,4 @@ pysqlite3-binary
 pypdf
 rank-bm25
 accelerate
+streamlit-mic-recorder
