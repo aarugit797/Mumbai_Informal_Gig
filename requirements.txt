@@ -11,3 +11,4 @@ langchain-classic
 langchain-community
 sentence-transformers
 pypdf
+rank-bm25
