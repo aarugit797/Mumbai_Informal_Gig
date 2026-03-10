@@ -1,4 +1,5 @@
 streamlit
+streamlit-mic-recorder
 langchain
 langchain-community
 langchain-core
@@ -6,10 +7,5 @@ langchain-classic
 langchain-huggingface
 langchain-chroma
 sentence-transformers
-transformers
-torch
-pysqlite3-binary
 pypdf
 rank-bm25
-accelerate
-streamlit-mic-recorder
