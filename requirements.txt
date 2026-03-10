@@ -5,8 +5,6 @@ langchain-huggingface
 langchain-chroma
 transformers
 torch
-accelerate
-bitsandbytes
 pysqlite3-binary
 import-ipynb
 langchain-classic
