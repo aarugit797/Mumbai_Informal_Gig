@@ -8,6 +8,7 @@ os.environ["CUDA_VISIBLE_DEVICES"] = ""
 torch.cuda.is_available = lambda : False
 
 import os
+import streamlit as st
 from langchain_huggingface import HuggingFaceEndpoint, HuggingFaceEmbeddings
 from langchain_chroma import Chroma
 from langchain_community.retrievers import BM25Retriever
@@ -18,17 +19,20 @@ from langchain_core.output_parsers import StrOutputParser
 from langchain_community.document_loaders import PyPDFDirectoryLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 
-# --- 1. CONFIGURATION ---
-# You can get a free token at huggingface.co/settings/tokens
-# Best practice: Add this to Streamlit Secrets instead of hardcoding
-HF_TOKEN = "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" 
+# --- 1. CONFIGURATION & SECRETS ---
+# This pulls the token from the Streamlit Cloud Dashboard settings
+try:
+    HF_TOKEN = st.secrets["HF_TOKEN"]
+except KeyError:
+    st.error("Please add HF_TOKEN to your Streamlit Secrets!")
+    st.stop()
 
 DATA_DIR = "./data"
 PERSIST_DIR = "./mumbai_worker_db"
 EMBEDDING_MODEL = "BAAI/bge-m3"
 
 # --- 2. RETRIEVERS (FORCING CPU) ---
-# We force 'cpu' here to ensure no NVIDIA driver is sought
+# Forced to 'cpu' to prevent NVIDIA driver errors on Streamlit Cloud
 embeddings = HuggingFaceEmbeddings(
     model_name=EMBEDDING_MODEL,
     model_kwargs={'device': 'cpu'} 
@@ -50,14 +54,14 @@ chunks = splitter.split_documents(docs)
 bm25_retriever = BM25Retriever.from_documents(chunks)
 bm25_retriever.k = 7
 
-# Combine both retrievers
+# Combine both retrievers for better accuracy
 ensemble_retriever = EnsembleRetriever(
     retrievers=[dense_retriever, bm25_retriever],
     weights=[0.65, 0.35]
 )
 
-# --- 3. LLM SETUP (API VERSION) ---
-# This uses 0MB of your Streamlit RAM
+# --- 3. LLM SETUP (HF INFERENCE API) ---
+# This runs the model on Hugging Face's servers, saving your Streamlit RAM
 llm = HuggingFaceEndpoint(
     repo_id="google/gemma-2-2b-it",
     task="text-generation",
@@ -92,7 +96,7 @@ def format_docs(docs):
 def format_sources(docs):
     return ", ".join(set(os.path.basename(doc.metadata.get("source", "Unknown")) for doc in docs))
 
-# Final Chain Pipeline
+# Final logic pipeline
 rag_chain = (
     {
         "context": ensemble_retriever | format_docs,
