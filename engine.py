@@ -1,10 +1,11 @@
 import os
 import torch
 
-# --- 1. THE GPU KILL SWITCH (MUST BE FIRST) ---
+# 1. Hide the GPU from the system environment
 os.environ["CUDA_VISIBLE_DEVICES"] = ""
+
+# 2. Force torch to report that no GPU is available
 torch.cuda.is_available = lambda : False
-torch.device = lambda x: torch.device('cpu')
 
 from transformers import AutoTokenizer, AutoModelForCausalLM, pipeline
 from langchain_huggingface import HuggingFacePipeline, HuggingFaceEmbeddings
