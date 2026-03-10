@@ -10,3 +10,4 @@ bitsandbytes
 pysqlite3-binary
 import-ipynb
 langchain-classic
+langchain-community
