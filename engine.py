@@ -36,9 +36,13 @@ PERSIST_DIR = "./mumbai_worker_db"
 EMBEDDING_MODEL = "BAAI/bge-m3"
 
 # --- 2. RETRIEVERS ---
-embeddings = HuggingFaceEmbeddings(
-    model_name=EMBEDDING_MODEL,
-    model_kwargs={'device': 'cpu'} 
+# --- 3. EMBEDDINGS (THE "BAAI" ERROR FIX) ---
+# This version uses 0MB of your Streamlit RAM
+from langchain_huggingface import HuggingFaceEndpointEmbeddings
+
+embeddings = HuggingFaceEndpointEmbeddings(
+    model="BAAI/bge-m3",
+    huggingfacehub_api_token=HF_TOKEN
 )
 
 vectorstore = Chroma(persist_directory=PERSIST_DIR, embedding_function=embeddings)
