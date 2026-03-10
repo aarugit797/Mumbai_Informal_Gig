@@ -12,3 +12,4 @@ langchain-community
 sentence-transformers
 pypdf
 rank-bm25
+accelerate
