@@ -10,3 +10,5 @@ sentence-transformers
 pypdf
 rank-bm25
 pysqlite3-binary
+torch
+torchvision
